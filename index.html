@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Irregular Preterite Flashcards</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 420px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+    p { color: #444; font-size: 0.9rem; }
+    .card {
+      border: 1px solid #ccc; border-radius: 8px; min-height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 1.25rem; margin: 1rem 0; cursor: pointer;
+      user-select: none;
+    }
+    .front { font-size: 1.5rem; font-weight: 600; }
+    .back { font-size: 1.05rem; line-height: 1.6; }
+    .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    button { flex: 1; padding: 0.6rem; font-size: 0.95rem; cursor: pointer; }
+    .meta { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Irregular Preterite</h1>
+  <p>Tap the card to flip. Use Next / Shuffle.</p>
+  <div class="meta" id="meta"></div>
+  <div class="card" id="card" onclick="flip()"></div>
+  <div class="row">
+    <button onclick="prev()">Prev</button>
+    <button onclick="next()">Next</button>
+    <button onclick="shuffle()">Shuffle</button>
+  </div>
+  <script>
+    const verbs = [
+      { inf: "ser / ir", forms: "fui, fuiste, fue, fuimos, fueron" },
+      { inf: "hacer", forms: "hice, hiciste, hizo, hicimos, hicieron" },
+      { inf: "tener", forms: "tuve, tuviste, tuvo, tuvimos, tuvieron" },
+      { inf: "estar", forms: "estuve, estuviste, estuvo, estuvimos, estuvieron" },
+      { inf: "poder", forms: "pude, pudiste, pudo, pudimos, pudieron" },
+      { inf: "poner", forms: "puse, pusiste, puso, pusimos, pusieron" },
+      { inf: "saber", forms: "supe, supiste, supo, supimos, supieron" },
+      { inf: "decir", forms: "dije, dijiste, dijo, dijimos, dijeron" },
+      { inf: "venir", forms: "vine, viniste, vino, vinimos, vinieron" },
+      { inf: "querer", forms: "quise, quisiste, quiso, quisimos, quisieron" },
+    ];
+    let i = 0;
+    let showBack = false;
+    let order = verbs.map((_, idx) => idx);
+    function render() {
+      const v = verbs[order[i]];
+      const card = document.getElementById("card");
+      document.getElementById("meta").textContent = `${i + 1} / ${order.length}` + (showBack ? " · answer" : " · tap to reveal");
+      if (!showBack) {
+        card.innerHTML = `<div class="front">${v.inf}</div>`;
+      } else {
+        card.innerHTML = `<div class="back"><strong>${v.inf}</strong><br>yo → ellos<br>${v.forms}</div>`;
+      }
+    }
+    function flip() { showBack = !showBack; render(); }
+    function next() { i = (i + 1) % order.length; showBack = false; render(); }
+    function prev() { i = (i - 1 + order.length) % order.length; showBack = false; render(); }
+    function shuffle() {
+      for (let j = order.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [order[j], order[k]] = [order[k], order[j]];
+      }
+      i = 0; showBack = false; render();
+    }
+    render();
+  </script>
+</body>
+</html>
